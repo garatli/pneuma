@@ -1,6 +1,10 @@
 ### dependency
 streamlit
-numpy
+streamlit_lottie
+requests
+time
+json
+urllib
 
 ### local packages -
 -e . 
