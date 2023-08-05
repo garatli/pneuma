@@ -2,9 +2,6 @@
 streamlit
 streamlit_lottie
 requests
-time
-json
-urllib
 
 ### local packages -
 -e . 
