@@ -118,6 +118,8 @@ if submitted:
     st.markdown(ailment)
     # Display Recommended Books
     st.markdown("<h2 style='text-align: center;'>Recommended Books</h2>", unsafe_allow_html=True)
+    st.markdown("<br>", unsafe_allow_html=True)  # Add an empty line
+    st.markdown("<br>", unsafe_allow_html=True)  # Add an empty line
     cols = st.columns(len(book_info_list))  # Create as many columns as there are books
     for i, info in enumerate(book_info_list):
         cols[i].markdown(f'<a href="{info[2]}" target="_blank"><img src="{info[1]}" style="width:125px;height:180px;display:block;margin-left:auto;margin-right:auto;"></a>', unsafe_allow_html=True)
