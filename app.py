@@ -108,7 +108,7 @@ with st.container():
                 emotion, ailment, book_info_list = classify_and_recommend(text)
 
     with col2:
-        st_lottie(lottie_anim, height=300, key="coding")
+        st_lottie(lottie_anim, height=350, key="coding")
 
 # Display Model Results
 if submitted:
