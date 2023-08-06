@@ -15,16 +15,15 @@ def load_lottieurl(url):
 
 # Function for querying Hugging Face models
 def query_with_retry(payload, API_URL, headers, max_retries=3, delay=30):
-    for i in range(max_retries):
-        try:
-            response = requests.post(API_URL, headers=headers, json=payload)
+    for _ in range(max_retries):
+        response = requests.post(API_URL, headers=headers, json=payload)
+        
+        if response.status_code == 200:  # If successful
             return response.json()
-        except Exception as e:
-            print(f'API Error: {str(e)}. Retrying in {delay} seconds.')
-            if i < max_retries - 1:  # no delay for the last try
-                time.sleep(delay)
-            else:
-                raise
+        else:
+            st.warning(f"Waiting for Model to load on HuggingFace. Retrying in {delay} seconds...")
+            time.sleep(delay)
+    raise RuntimeError("Failed to fetch results from HuggingFace API after multiple attempts.")
 
 
 # Function to fetch book details using Google Books API
@@ -44,6 +43,9 @@ def classify_and_recommend(text):
     API_URL = "https://api-inference.huggingface.co/models/poom-sci/bert-base-uncased-multi-emotion"
     headers = {"Authorization": "Bearer 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"}
     output_1 = query_with_retry({"inputs": text,}, API_URL, headers)
+    if not output_1 or not output_1[0] or not output_1[0][0]:
+        st.error("Unexpected response format from the HuggingFace API. Please retry in 30 seconds")
+        return None, None, None  # Return empty results
     emotion = output_1[0][0].get('label')
     progress_bar.progress(50)
 
@@ -106,7 +108,7 @@ with st.container():
                 emotion, ailment, book_info_list = classify_and_recommend(text)
 
     with col2:
-        st_lottie(lottie_anim, height=250, key="coding")
+        st_lottie(lottie_anim, height=300, key="coding")
 
 # Display Model Results
 if submitted:
@@ -115,8 +117,8 @@ if submitted:
     st.markdown("### Predicted Ailment:")
     st.markdown(ailment)
     # Display Recommended Books
-    st.markdown("<h2 style='text-align: center; color: white;'>Recommended Books</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center;'>Recommended Books</h2>", unsafe_allow_html=True)
     cols = st.columns(len(book_info_list))  # Create as many columns as there are books
     for i, info in enumerate(book_info_list):
-        cols[i].markdown(f'<a href="{info[2]}" target="_blank"><img src="{info[1]}" style="width:100px;height:150px;display:block;margin-left:auto;margin-right:auto;"></a>', unsafe_allow_html=True)
+        cols[i].markdown(f'<a href="{info[2]}" target="_blank"><img src="{info[1]}" style="width:125px;height:180px;display:block;margin-left:auto;margin-right:auto;"></a>', unsafe_allow_html=True)
         cols[i].markdown(f"<center>{info[0]}</center>", unsafe_allow_html=True)
