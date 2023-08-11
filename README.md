@@ -42,7 +42,7 @@ Pneuma is a unique book recommendation system that employs Natural Language Proc
 
 ## 🌐 Deployment
 
-Pneuma is deployed on Heroku. Experience it in action [here](https://pneuma-da95e35f0739.herokuapp.com/).
+Pneuma is deployed on Heroku. Experience it in action [here](https://pneuma-ade4f5d0b8ca.herokuapp.com/).
 
 ## 🤝 Contributing
 
