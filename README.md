@@ -1,7 +1,7 @@
-# Unstuck: NLP-based Book Recommender
+# Pneuma: NLP-based Book Recommender
 
 
-Unstuck is a unique book recommendation system that employs Natural Language Processing (NLP) to suggest books based on users' emotional expressions. By tapping into Hugging Face's state-of-the-art machine learning models, Unstuck delivers insights into users' emotions and offers literature that can provide comfort, understanding, or even avenues of exploration.
+Pneuma is a unique book recommendation system that employs Natural Language Processing (NLP) to suggest books based on users' emotional expressions. By tapping into Hugging Face's state-of-the-art machine learning models, Pneuma delivers insights into users' emotions and offers literature that can provide comfort, understanding, or even avenues of exploration.
 
 ## 🌟 Features
 
@@ -20,8 +20,8 @@ Unstuck is a unique book recommendation system that employs Natural Language Pro
 
 1. **Clone the Repository**:
     ```bash
-    git clone https://github.com/garatlia/unstuck.git
-    cd unstuck
+    git clone https://github.com/garatlia/pneuma.git
+    cd pneuma
     ```
 
 2. **Set Up Virtual Environment**:
@@ -42,11 +42,11 @@ Unstuck is a unique book recommendation system that employs Natural Language Pro
 
 ## 🌐 Deployment
 
-Unstuck is deployed on Heroku. Experience it in action [here](https://unstuck-da95e35f0739.herokuapp.com/).
+Pneuma is deployed on Heroku. Experience it in action [here](https://pneuma-da95e35f0739.herokuapp.com/).
 
 ## 🤝 Contributing
 
-While we genuinely appreciate your interest in the Unstuck project, we are currently not accepting public contributions as there are significant future developments and features in the pipeline. If you have feedback or ideas, please feel free to open an issue to discuss them, but kindly refrain from making direct pull requests to the repository.
+While we genuinely appreciate your interest in the Pneuma project, we are currently not accepting public contributions as there are significant future developments and features in the pipeline. If you have feedback or ideas, please feel free to open an issue to discuss them, but kindly refrain from making direct pull requests to the repository.
 
 If you're interested in collaboration or potential partnerships, please reach out directly. We would love to talk.
 
