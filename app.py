@@ -38,6 +38,7 @@ def fetch_book_info(title):
 def classify_and_recommend(text):
     progress_bar = st.progress(0)
     headers = {"Authorization": f"Bearer {API_KEY}"}
+
     
     # Emotion Classification
     progress_bar.text("Classifying emotion...")
@@ -46,47 +47,50 @@ def classify_and_recommend(text):
     emotion = output_1[0][0].get('label')
     progress_bar.progress(50)
 
+    supported_emotions = ["fear", "sadness"]
+    if emotion not in supported_emotions:
+        st.error(f"The emotion {emotion} is not currently supported. Please try with a different text.")
+    else:
 
-    # Ailment Classification
-    progress_bar.text("Predicting ailment...")
-    API_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-mnli"
-    if emotion == 'fear':
-      candidate_labels = ['fear of death', 'fear of flying']
-    elif emotion == 'sadness':
-      candidate_labels = ['depression', 'grief']
-    else: st.error(f"The emotion '{emotion}' is not currently supported. Please try with a different text.")
+        # Ailment Classification
+        progress_bar.text("Predicting ailment...")
+        API_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-mnli"
+        if emotion == 'fear':
+            candidate_labels = ['fear of death', 'fear of flying']
+        elif emotion == 'sadness':
+            candidate_labels = ['depression', 'grief']
 
-    output_2 = query_with_retry({
-        "inputs": text,
-        "parameters": {"candidate_labels": candidate_labels},
-    }, API_URL, headers)
-    ailment = output_2.get('labels')[0]
-    progress_bar.progress(100)
-    time.sleep(1)
-    progress_bar.empty()
+        output_2 = query_with_retry({
+            "inputs": text,
+            "parameters": {"candidate_labels": candidate_labels},
+        }, API_URL, headers)
+        ailment = output_2.get('labels')[0]
+        progress_bar.progress(100)
+        time.sleep(1)
+        progress_bar.empty()
 
-    # Books recommended by The Novel Cure
-    if ailment == 'fear of death':
-        book_list = ['White Noise', 'Hundred Years of Solitude']
-    elif ailment == 'fear of flying':
-        book_list = ["Night Flight", "The Count of Monte Cristo", "The Magus", "In the Woods", "Carter Beats the Devil"]
-    elif ailment == 'depression':
-        book_list = ['The Unbearable Lightness of Being', 'The Bell Jar', 'Mr. Chartwell', 'The Marriage Plot']
-    elif ailment == 'grief':
-        book_list = ["After You'd Gone", 'Incendiary', 'Extremely Loud & Incredibly Close', 'What I Loved']
+        # Books recommended by The Novel Cure
+        if ailment == 'fear of death':
+            book_list = ['White Noise', 'Hundred Years of Solitude']
+        elif ailment == 'fear of flying':
+            book_list = ["Night Flight", "The Count of Monte Cristo", "The Magus", "In the Woods", "Carter Beats the Devil"]
+        elif ailment == 'depression':
+            book_list = ['The Unbearable Lightness of Being', 'The Bell Jar', 'Mr. Chartwell', 'The Marriage Plot']
+        elif ailment == 'grief':
+            book_list = ["After You'd Gone", 'Incendiary', 'Extremely Loud & Incredibly Close', 'What I Loved']
 
 
-    # Fetch book info from Google Books API (You can replace this part with static list as you needed)
-    progress_bar.text("Fetching book information...")
-    book_info_list = []
-    for book in book_list:
-        title, image, url = fetch_book_info(book)
-        book_info_list.append((title, image, url))
-    progress_bar.progress(100)
-    time.sleep(1)
-    progress_bar.empty()
+        # Fetch book info from Google Books API (You can replace this part with static list as you needed)
+        progress_bar.text("Fetching book information...")
+        book_info_list = []
+        for book in book_list:
+            title, image, url = fetch_book_info(book)
+            book_info_list.append((title, image, url))
+        progress_bar.progress(100)
+        time.sleep(1)
+        progress_bar.empty()
 
-    return emotion, ailment, book_info_list
+        return emotion, ailment, book_info_list
 
 # Load Animation
 lottie_anim = load_lottieurl("https://lottie.host/fa433011-9a30-4fcc-a03e-a7c9c76a917b/feBor8W1MA.json")
