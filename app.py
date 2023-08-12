@@ -5,6 +5,7 @@ import requests
 import time  
 import json
 import urllib
+from cred import API_KEY
 
 # Function for loading animation
 def load_lottieurl(url):
@@ -14,17 +15,16 @@ def load_lottieurl(url):
     return r.json()
 
 # Function for querying Hugging Face models
-def query_with_retry(payload, API_URL, headers, max_retries=3, delay=30):
+def query_with_retry(payload, API_URL, headers, max_retries=3, delay=15):
     for _ in range(max_retries):
         response = requests.post(API_URL, headers=headers, json=payload)
         
         if response.status_code == 200:  # If successful
             return response.json()
         else:
-            st.warning(f"Waiting for Model to load on HuggingFace. Retrying in {delay} seconds...")
+            st.warning(f"Waiting for the model's response from HuggingFace API. Retrying in {delay} seconds...")
             time.sleep(delay)
-    raise RuntimeError("Failed to fetch results from HuggingFace API after multiple attempts.")
-
+    raise st.error("Apologies. It seems that HuggingFace APIs are currenly overloaded")
 
 # Function to fetch book details using Google Books API
 def fetch_book_info(title):
@@ -37,17 +37,15 @@ def fetch_book_info(title):
 # Function for classifying and generating recommendations
 def classify_and_recommend(text):
     progress_bar = st.progress(0)
+    headers = {"Authorization": f"Bearer {API_KEY}"}
     
     # Emotion Classification
     progress_bar.text("Classifying emotion...")
     API_URL = "https://api-inference.huggingface.co/models/poom-sci/bert-base-uncased-multi-emotion"
-    headers = {"Authorization": "Bearer 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"}
     output_1 = query_with_retry({"inputs": text,}, API_URL, headers)
-    if not output_1 or not output_1[0] or not output_1[0][0]:
-        st.error("Unexpected response format from the HuggingFace API. Please retry in 30 seconds")
-        return None, None, None  # Return empty results
     emotion = output_1[0][0].get('label')
     progress_bar.progress(50)
+
 
     # Ailment Classification
     progress_bar.text("Predicting ailment...")
@@ -56,6 +54,8 @@ def classify_and_recommend(text):
       candidate_labels = ['fear of death', 'fear of flying']
     elif emotion == 'sadness':
       candidate_labels = ['depression', 'grief']
+    else: st.error(f"The emotion '{emotion}' is not currently supported. Please try with a different text.")
+
     output_2 = query_with_retry({
         "inputs": text,
         "parameters": {"candidate_labels": candidate_labels},
@@ -92,10 +92,10 @@ def classify_and_recommend(text):
 lottie_anim = load_lottieurl("https://lottie.host/fa433011-9a30-4fcc-a03e-a7c9c76a917b/feBor8W1MA.json")
 
 # Page Configuration
-st.set_page_config(page_title="Unstuck", page_icon="📕", layout="wide")
-header_text = "Unstuck by Abdullah Garatli"
+st.set_page_config(page_title="Pneuma", page_icon="📕", layout="wide")
+header_text = "Pneuma"
 st.markdown(f"<h1 style='text-align: center;'>{header_text}</h1>", unsafe_allow_html=True)
-st.markdown("#### Befriend a Book.. And You Will Never Walk Alone")
+st.markdown("##### Befriend a Book.. And You Will Never Walk Alone")
 
 # Entry Box & Animation
 with st.container():
@@ -108,7 +108,7 @@ with st.container():
                 emotion, ailment, book_info_list = classify_and_recommend(text)
 
     with col2:
-        st_lottie(lottie_anim, height=350, key="coding")
+        st_lottie(lottie_anim, height=300, key="coding")
 
 # Display Model Results
 if submitted:
@@ -124,3 +124,6 @@ if submitted:
     for i, info in enumerate(book_info_list):
         cols[i].markdown(f'<a href="{info[2]}" target="_blank"><img src="{info[1]}" style="width:125px;height:180px;display:block;margin-left:auto;margin-right:auto;"></a>', unsafe_allow_html=True)
         cols[i].markdown(f"<center>{info[0]}</center>", unsafe_allow_html=True)
+
+st.markdown("---")  # Optional horizontal line for separation
+st.markdown("Developed by **Abdullah Garatli**")
