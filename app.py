@@ -5,7 +5,7 @@ import requests
 import time  
 import json
 import urllib
-import OS
+import os
 
 # Function for loading animation
 def load_lottieurl(url):
