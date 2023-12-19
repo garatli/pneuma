@@ -5,7 +5,7 @@ import requests
 import time  
 import json
 import urllib
-from cred import API_KEY
+from cred import Hugg_API_Key, Goog_API_Key
 
 # Function for loading animation
 def load_lottieurl(url):
@@ -29,7 +29,7 @@ def query_with_retry(payload, API_URL, headers, max_retries=3, delay=15):
 # Function to fetch book details using Google Books API
 def fetch_book_info(title):
     title = urllib.parse.quote(title)  # URL encode the book title
-    response = urllib.request.urlopen(f'https://www.googleapis.com/books/v1/volumes?q={title}&key=AIzaSyCsYBqQ45tYCBhEbBbmpBFnB9cH1Bret_w')
+    response = urllib.request.urlopen(f'https://www.googleapis.com/books/v1/volumes?q={title}&key={Goog_API_Key}')
     data = json.load(response)
     info = data['items'][0]['volumeInfo']  # Get info of the first matched book
     return info['title'], info['imageLinks']['thumbnail'], info['previewLink']
@@ -37,12 +37,12 @@ def fetch_book_info(title):
 # Function for classifying and generating recommendations
 def classify_and_recommend(text):
     progress_bar = st.progress(0)
-    headers = {"Authorization": f"Bearer {API_KEY}"}
-
+    headers = {"Authorization": f"Bearer {Hugg_API_Key}"}
     
     # Emotion Classification
     progress_bar.text("Classifying emotion...")
-    API_URL = "https://api-inference.huggingface.co/models/poom-sci/bert-base-uncased-multi-emotion"
+    API_URL = "https://api-inference.huggingface.co/models/SamLowe/roberta-base-go_emotions"
+
     output_1 = query_with_retry({"inputs": text,}, API_URL, headers)
     emotion = output_1[0][0].get('label')
     progress_bar.progress(50)
@@ -55,6 +55,7 @@ def classify_and_recommend(text):
         # Ailment Classification
         progress_bar.text("Predicting ailment...")
         API_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-mnli"
+        
         if emotion == 'fear':
             candidate_labels = ['fear of death', 'fear of flying']
         elif emotion == 'sadness':
