@@ -5,7 +5,6 @@ import requests
 import time  
 import json
 import urllib
-from cred import Hugg_API_Key, Goog_API_Key
 
 # Function for loading animation
 def load_lottieurl(url):
