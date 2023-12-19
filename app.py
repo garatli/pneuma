@@ -24,7 +24,7 @@ def query_with_retry(payload, API_URL, headers, max_retries=3, delay=15):
         else:
             st.warning(f"Waiting for the model's response from HuggingFace API. Retrying in {delay} seconds...")
             time.sleep(delay)
-    raise st.error("Apologies. It seems that HuggingFace APIs are currenly overloaded")
+    st.error("Apologies. It seems that HuggingFace APIs are currenly overloaded")
 
 # Function to fetch book details using Google Books API
 def fetch_book_info(title):
