@@ -2,6 +2,7 @@
 streamlit
 streamlit_lottie
 requests
+os
 
 ### local packages -
 -e . 
