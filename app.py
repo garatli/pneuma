@@ -5,6 +5,7 @@ import requests
 import time  
 import json
 import urllib
+import OS
 
 # Function for loading animation
 def load_lottieurl(url):
@@ -28,6 +29,7 @@ def query_with_retry(payload, API_URL, headers, max_retries=3, delay=15):
 # Function to fetch book details using Google Books API
 def fetch_book_info(title):
     title = urllib.parse.quote(title)  # URL encode the book title
+    Goog_API_Key = os.environ.get('Goog_API_Key')
     response = urllib.request.urlopen(f'https://www.googleapis.com/books/v1/volumes?q={title}&key={Goog_API_Key}')
     data = json.load(response)
     info = data['items'][0]['volumeInfo']  # Get info of the first matched book
@@ -36,6 +38,7 @@ def fetch_book_info(title):
 # Function for classifying and generating recommendations
 def classify_and_recommend(text):
     progress_bar = st.progress(0)
+    Hugg_API_Key = os.environ.get('Hugg_API_Key')
     headers = {"Authorization": f"Bearer {Hugg_API_Key}"}
     
     # Emotion Classification
